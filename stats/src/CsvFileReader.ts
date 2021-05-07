@@ -1,16 +1,14 @@
 // every time we use a build in node module
 // we have to install @types/node
 import fs from 'fs';
-import { MatchResult } from './MatchResult';
 
-type MatchData = [Date, string, string, number, number, MatchResult, string];
-
-export abstract class CsvFileReader {
-  data: MatchData[] = [];
+// <T> is a generic type
+export abstract class CsvFileReader<T> {
+  data: T[] = [];
 
   constructor(public filename: string) {}
 
-  abstract mapRow(row: string[]): MatchData;
+  abstract mapRow(row: string[]): T;
 
   read(): void {
     // when adding encoding a string is returned instead of a buffer
