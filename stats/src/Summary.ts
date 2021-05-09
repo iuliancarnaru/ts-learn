@@ -10,6 +10,7 @@ export interface OutputTarget {
   print(report: string): void;
 }
 
+// using composition
 export class Summary {
   static winsAnalysisWithHtmlReport(team: string): Summary {
     return new Summary(new WinsAnalysis(team), new HtmlReport());

@@ -1,5 +1,6 @@
 import { MatchResult } from './MatchResult';
 
+// tuple
 export type MatchData = [
   Date,
   string,
