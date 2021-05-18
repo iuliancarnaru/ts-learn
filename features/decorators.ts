@@ -1,14 +1,17 @@
 @classDecorator
 class Boat {
   @testDecorator
+  // property
   color: string = 'red';
 
   @testDecorator
+  // accessor
   getFormattedColor(): string {
     return `This boat color is ${this.color}`;
   }
 
   @logError('Oops, something happened!')
+  // method
   pilot(
     @parameterDecorator speed: string,
     @parameterDecorator generateWake: boolean
