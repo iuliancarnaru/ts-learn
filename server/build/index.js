@@ -7,6 +7,8 @@ var express_1 = __importDefault(require("express"));
 var cors_1 = __importDefault(require("cors"));
 var cookie_session_1 = __importDefault(require("cookie-session"));
 var loginRoutes_1 = require("./routes/loginRoutes");
+var controller_1 = require("./controllers/decorators/controller");
+require("./controllers/LoginController");
 var app = express_1.default();
 app.use(cors_1.default());
 app.use(express_1.default.urlencoded({
@@ -14,6 +16,7 @@ app.use(express_1.default.urlencoded({
 }));
 app.use(cookie_session_1.default({ keys: ['secret'] }));
 app.use(loginRoutes_1.router);
+app.use(controller_1.router);
 app.listen(3000, function () {
     console.log('Listening on port 3000');
 });
