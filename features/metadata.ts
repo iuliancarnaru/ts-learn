@@ -25,17 +25,28 @@ const note2 = Reflect.getMetadata('note', plane, 'color');
 
 // METADATA and DECORATORS on CLASSES
 
+@controller
 class Plane {
   color: string = 'red';
 
-  @markFunction
+  @get('/login')
   fly(): void {
     console.log('Vrr');
   }
 }
 
-function markFunction(target: Plane, key: string) {
-  Reflect.defineMetadata('secret', 123, target, key);
+function get(path: string) {
+  return function (target: Plane, key: string) {
+    Reflect.defineMetadata('path', path, target, key);
+  };
 }
 
-const secret = Reflect.getMetadata('secret', Plane.prototype, 'fly');
+function controller(target: typeof Plane) {
+  for (let key in target.prototype) {
+    const path = Reflect.getMetadata('path', target.prototype, key);
+    const middleware = Reflect.getMetadata('middleware', target.prototype, key);
+    // router.get(path, middleware, target.prototype[key]);
+  }
+}
+
+// const secret = Reflect.getMetadata('secret', Plane.prototype, 'fly');
