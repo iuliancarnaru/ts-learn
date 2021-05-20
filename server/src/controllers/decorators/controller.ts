@@ -26,39 +26,40 @@ export function controller(routePrefix: string) {
   return function (target: Function) {
     const router = AppRouter.getInstance();
 
-    const targetPrototypeKeys = Object.keys(target.prototype);
+    for (let key in target.prototype) {
+      if (target.prototype.hasOwnProperty(key)) {
+        const routeHandler = target.prototype[key];
 
-    for (let key in targetPrototypeKeys) {
-      const routeHandler = target.prototype[key];
-
-      const path = Reflect.getMetadata(
-        MetadataKeys.path,
-        target.prototype,
-        key
-      );
-      const method: Methods = Reflect.getMetadata(
-        MetadataKeys.method,
-        target.prototype,
-        key
-      );
-
-      const middlewares =
-        Reflect.getMetadata(MetadataKeys.middleware, target.prototype, key) ||
-        [];
-
-      const requiredBodyProps =
-        Reflect.getMetadata(MetadataKeys.validator, target.prototype, key) ||
-        [];
-
-      const validator = bodyValidators(requiredBodyProps);
-
-      if (path) {
-        router[method](
-          `${routePrefix}${path}`,
-          ...middlewares,
-          validator,
-          routeHandler
+        const path = Reflect.getMetadata(
+          MetadataKeys.path,
+          target.prototype,
+          key
         );
+
+        const method: Methods = Reflect.getMetadata(
+          MetadataKeys.method,
+          target.prototype,
+          key
+        );
+
+        const middlewares =
+          Reflect.getMetadata(MetadataKeys.middleware, target.prototype, key) ||
+          [];
+
+        const requiredBodyProps =
+          Reflect.getMetadata(MetadataKeys.validator, target.prototype, key) ||
+          [];
+
+        const validator = bodyValidators(requiredBodyProps);
+
+        if (path) {
+          router[method](
+            `${routePrefix}${path}`,
+            ...middlewares,
+            validator,
+            routeHandler
+          );
+        }
       }
     }
   };
