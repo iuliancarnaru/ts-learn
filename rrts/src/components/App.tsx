@@ -5,13 +5,33 @@ import { StoreState } from '../reducers';
 
 interface AppProps {
   todos: Todo[];
+  // because we are using thunk we have to add Function type
   fetchTodos: Function;
   deleteTodo: typeof deleteTodo;
 }
 
-class _App extends Component<AppProps> {
+interface AppState {
+  fetching: boolean;
+}
+
+class _App extends Component<AppProps, AppState> {
+  constructor(props: AppProps) {
+    super(props);
+
+    this.state = {
+      fetching: false,
+    };
+  }
+
+  componentDidUpdate(prevProps: AppProps) {
+    if (!prevProps.todos.length && this.props.todos.length) {
+      this.setState({ fetching: false });
+    }
+  }
+
   onButtonClick = (): void => {
     this.props.fetchTodos();
+    this.setState({ fetching: true });
   };
 
   onTodoClick = (id: number): void => {
@@ -21,9 +41,9 @@ class _App extends Component<AppProps> {
   renderList(): JSX.Element[] {
     return this.props.todos.map((todo: Todo) => {
       return (
-          <div onClick={() => this.onTodoClick(todo.id)} key={todo.id}>
-            {todo.title}
-          </div>
+        <div onClick={() => this.onTodoClick(todo.id)} key={todo.id}>
+          {todo.title}
+        </div>
       );
     });
   }
@@ -34,6 +54,7 @@ class _App extends Component<AppProps> {
         <button type="button" onClick={this.onButtonClick}>
           Fetch data
         </button>
+        {this.state.fetching ? 'Loading' : null}
         {this.renderList()}
       </div>
     );
